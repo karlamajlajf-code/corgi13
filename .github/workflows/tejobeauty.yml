@@ -1,0 +1,49 @@
+name: tejobeauty
+
+on:
+    push:
+        branches:
+            - main
+            - master
+            - 001-build-comprehensive-ecommerce
+    pull_request:
+        branches:
+            - main
+            - master
+
+permissions:
+    actions: read
+    contents: read
+
+jobs:
+    main:
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: tejospec
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  filter: tree:0
+                  fetch-depth: 0
+
+            - uses: pnpm/action-setup@v4
+              with:
+                  version: 9.14.2
+                  run_install: false
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: pnpm
+                  cache-dependency-path: tejospec/pnpm-lock.yaml
+
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm dlx playwright install --with-deps
+
+            - run: npx nx affected -t lint test build e2e
+
+            - run: npx nx fix-ci
+              if: always()
