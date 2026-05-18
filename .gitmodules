@@ -1,3 +1,4 @@
 [submodule "tejospec"]
 	path = tejospec
-	url = https://github.com/corgi13/tejospec
+        url = https://github.com/tb2tb4545/tejospec
+        branch = 001-build-comprehensive-ecommerce
